@@ -1,0 +1,60 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace TuDiMianJiJiSuan
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string count = textBox1.Text;
+            bool bDup = checkBox1.Checked;
+            int icnt = richTextBox1.Lines.Count();
+            string separator = textBox2.Text;
+            StringSplit spt = new StringSplitFun(separator);
+            spt.Duplicates = bDup;
+            string[] Point = new string[Convert.ToInt16(count) * 2];
+            if (Convert.ToInt16(count) != icnt)
+                MessageBox.Show("请确认点位个数：");
+            for (int i = 0; i < icnt; i++)
+            {
+                string st = richTextBox1.Lines[i];
+                if (st.Trim() == "") continue;
+                string[] sts = spt.Splitting(st);
+                int n = sts.Length;
+                for (int j = 0; j < n; j++) {
+                    Point[2*i + j] = sts[j];
+                }
+            }
+            //创建周长p
+            double p = 0;
+            //创建面积s
+            double s = 0;
+            for (int j = 0; j < Convert.ToInt32(count); j++)
+            {
+                p =
+                    Math.Abs(1.0 / 2 * ((Convert.ToDouble(Point[j]) * Convert.ToDouble(Point[j + 3])) -
+                    Convert.ToDouble(Point[j + 1]) * Convert.ToDouble(Point[j + 2]))) + p;
+                s =
+                    Math.Sqrt(Math.Pow((Convert.ToDouble(Point[j]) - Convert.ToDouble(Point[j + 2])), 2)
+                    + Math.Pow((Convert.ToDouble(Point[j + 1]) - Convert.ToDouble(Point[j + 3])), 2)) + s;
+            }
+
+            textBox3.Text = p.ToString();
+            textBox4.Text = s.ToString();
+
+        }
+    }
+}
